@@ -13,14 +13,15 @@ import uniqid from "uniqid";
 const authorsRouter = express.Router();
 
 const currentFilePath = fileURLToPath(import.meta.url);
-console.log(currentFilePath);
+console.log("import...", import.meta.url);
+console.log("current path...", currentFilePath);
 
 const currentDirPath = dirname(currentFilePath);
-console.log("current path:", currentDirPath);
+console.log("current dir:", currentDirPath);
 
 const authorsJSONFilePath = join(currentDirPath, "authors.json");
 console.log("authors json path:", authorsJSONFilePath);
-
+// jsonPath = join(dirname(fileUrlToPath(import.meta.url),"authors.json"))//single code
 //1)
 authorsRouter.post("/", (req, res, next) => {
   // read the request body
@@ -33,7 +34,7 @@ authorsRouter.post("/", (req, res, next) => {
     console.log("authors:", authors);
     authors.push(newAuthor);
     fs.writeFileSync(authorsJSONFilePath, JSON.stringify(authors));
-    res.status(201).send({ id: newAuthor.id });
+    res.status(201).send({ newAuthor });
   } catch (error) {
     console.log(error);
   }
@@ -57,14 +58,19 @@ authorsRouter.get("/:authorId", (req, res) => {
   res.send(author);
 });
 //4)
-authorsRouter.put("/:authoeId", (req, res) => {
+authorsRouter.put("/:authorId", (req, res) => {
+  const authors = JSON.parse(fs.readFileSync(authorsJSONFilePath));
+  remaingAuthors;
+
   res.send("this PUT methond ");
 });
 //5)
 authorsRouter.delete("/:authorId", (req, res) => {
   //find author id and send as response
-
-  res.send(author);
+  const authors = JSON.parse(fs.readFileSync(authorsJSONFilePath));
+  const singleAuthor = authors.filter((a) => a.id !== req.params.authorId);
+  fs.writeFileSync(authorsJSONFilePath, JSON.stringify(singleAuthor));
+  res.status(204).send();
 });
 
 export default authorsRouter;

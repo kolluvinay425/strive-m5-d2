@@ -8,14 +8,6 @@
     "avatar": ""
   },
   {
-    "id": "2",
-    "name": "mahesh",
-    "surname": "kumar",
-    "email": "kolluvinay@gmail.com",
-    "DOB": "04/10/1994",
-    "avatar": ""
-  },
-  {
     "name": "vnay",
     "surname": "kllu",
     "email": "kollvinay425@gmail.com",
@@ -32,5 +24,23 @@
     "avatar": "",
     "id": "1pvppcgktkc3q1c",
     "createdAt": "2021-09-14T17:13:42.287Z"
+  },
+  {
+    "name": "vny",
+    "surname": "klu",
+    "email": "kollvinay425@gmail.com",
+    "DOB": "04/10/1983",
+    "avatar": "",
+    "id": "1pvprdgktlhcywn",
+    "createdAt": "2021-09-15T12:28:37.942Z"
+  },
+  {
+    "name": "vny",
+    "surname": "klu",
+    "email": "kollvinay425@gmail.com",
+    "DOB": "04/10/1983",
+    "avatar": "",
+    "id": "1pvpfj8ktli6tyz",
+    "createdAt": "2021-09-15T12:51:51.226Z"
   }
 ]

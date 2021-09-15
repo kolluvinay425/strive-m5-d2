@@ -1,0 +1,11 @@
+[
+  {
+    "category": "Information Tech",
+    "title": "my post",
+    "cover": "image-link",
+    "readTime": { "value": "10 ", "unit": "minutes" },
+    "author": { "name": "AUTHOR AVATAR NAME", "avatar": "AUTHOR AVATAR LINK" },
+    "content": "HTML",
+    "id": "1pvpaboktlkqugg"
+  }
+]
