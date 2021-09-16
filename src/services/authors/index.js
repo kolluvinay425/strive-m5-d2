@@ -60,7 +60,11 @@ authorsRouter.get("/:authorId", (req, res) => {
 //4)
 authorsRouter.put("/:authorId", (req, res) => {
   const authors = JSON.parse(fs.readFileSync(authorsJSONFilePath));
-  remaingAuthors;
+  const remaingAuthors = authors.filter((a) => a.id !== req.params.authorId);
+  const updateAuthor = { ...req.body, id: req.params.authorId };
+  remaingAuthors.push(updateAuthor);
+  fs.writeFileSync(authorsJSONFilePath, JSON.stringify(remaingAuthors));
+  res.send(remaingAuthors);
 
   res.send("this PUT methond ");
 });
