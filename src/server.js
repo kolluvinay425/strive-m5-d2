@@ -9,14 +9,15 @@ import {
   genericErrorHandlerMiddleware,
   badRequestError,
 } from "./services/errorHandlers.js";
+//--------------------------GLOBAL MIDDLEWARES---------------------------------
 const server = express();
-const port = 3001;
+const port = process.env.PORT_NUM;
 server.use(cors()); //should be here to able to communicate Front-End with back-end
 server.use(express.json()); // if i do not specify this line before routes,all the request bodies will be undefined
 
 server.use("/authors", authorsRouter);
 server.use("/blogposts", postRouter);
-
+//-------------------ERROR MIDDLEWARES(HANDLERS)-------------------------------
 server.use(badRequestError);
 server.use(notFoundErrorHandlerMiddleware);
 server.use(forbiddenErrorHandlerMiddleware);

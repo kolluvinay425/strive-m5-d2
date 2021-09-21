@@ -9,7 +9,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import uniqid from "uniqid";
-
+import createHttpError from "http-errors";
 const authorsRouter = express.Router();
 
 const currentFilePath = fileURLToPath(import.meta.url);
@@ -36,45 +36,65 @@ authorsRouter.post("/", (req, res, next) => {
     fs.writeFileSync(authorsJSONFilePath, JSON.stringify(authors));
     res.status(201).send({ newAuthor });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });
 //2)
-authorsRouter.get("/", (req, res) => {
-  const fileContent = fs.readFileSync(authorsJSONFilePath); //if i console log this i'll see the hexadecimal of the content
-  //console.log(fileContent);
-  console.log(JSON.parse(fileContent));
+authorsRouter.get("/", (req, res, next) => {
+  try {
+    const fileContent = fs.readFileSync(authorsJSONFilePath); //if i console log this i'll see the hexadecimal of the content
+    //console.log(fileContent);
+    console.log(JSON.parse(fileContent));
 
-  const authors = JSON.parse(fileContent);
+    const authors = JSON.parse(fileContent);
 
-  res.send(authors);
+    res.send(authors);
+  } catch (error) {
+    next(error);
+  }
 });
 //3)
-authorsRouter.get("/:authorId", (req, res) => {
-  const authors = JSON.parse(fs.readFileSync(authorsJSONFilePath));
-  const author = authors.find((a) => a.id === req.params.authorId);
-
-  console.log("authorId", req.params.authorId);
-  res.send(author);
+authorsRouter.get("/:authorId", (req, res, next) => {
+  try {
+    const authors = JSON.parse(fs.readFileSync(authorsJSONFilePath));
+    const author = authors.find((a) => a.id === req.params.authorId);
+    if (author) {
+      res.send(author);
+    } else {
+      next(
+        createHttpError(404, `post with id:${req.params.authorId} not found`)
+      );
+    }
+    console.log("authorId", req.params.authorId);
+  } catch (error) {
+    next(error);
+  }
 });
 //4)
 authorsRouter.put("/:authorId", (req, res) => {
-  const authors = JSON.parse(fs.readFileSync(authorsJSONFilePath));
-  const remaingAuthors = authors.filter((a) => a.id !== req.params.authorId);
-  const updateAuthor = { ...req.body, id: req.params.authorId };
-  remaingAuthors.push(updateAuthor);
-  fs.writeFileSync(authorsJSONFilePath, JSON.stringify(remaingAuthors));
-  res.send(remaingAuthors);
-
-  res.send("this PUT methond ");
+  try {
+    const authors = JSON.parse(fs.readFileSync(authorsJSONFilePath));
+    const remaingAuthors = authors.filter((a) => a.id !== req.params.authorId);
+    const updateAuthor = { ...req.body, id: req.params.authorId };
+    remaingAuthors.push(updateAuthor);
+    fs.writeFileSync(authorsJSONFilePath, JSON.stringify(remaingAuthors));
+    res.send(remaingAuthors);
+    res.send("this PUT methond ");
+  } catch (error) {
+    next(error);
+  }
 });
 //5)
 authorsRouter.delete("/:authorId", (req, res) => {
+  try {
+    const authors = JSON.parse(fs.readFileSync(authorsJSONFilePath));
+    const singleAuthor = authors.filter((a) => a.id !== req.params.authorId);
+    fs.writeFileSync(authorsJSONFilePath, JSON.stringify(singleAuthor));
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
   //find author id and send as response
-  const authors = JSON.parse(fs.readFileSync(authorsJSONFilePath));
-  const singleAuthor = authors.filter((a) => a.id !== req.params.authorId);
-  fs.writeFileSync(authorsJSONFilePath, JSON.stringify(singleAuthor));
-  res.status(204).send();
 });
 
 export default authorsRouter;
