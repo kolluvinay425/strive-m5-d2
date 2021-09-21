@@ -19,6 +19,9 @@
     "http-errors": "^1.8.0",
     "uniqid": "^5.4.0"
   },
+  "engines": {
+    "node": "14.17.1"
+  },
   "devDependencies": {
     "nodemon": "^2.0.12"
   },
