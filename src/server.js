@@ -11,6 +11,7 @@ import {
 } from "./services/errorHandlers.js";
 //--------------------------GLOBAL MIDDLEWARES---------------------------------
 const server = express();
+const port = process.env.PORT || 3000;
 const whitelist = [process.env.FE_DEV_URL, process.env.FE_PROD_URL];
 const corsOptions = {
   origin: function (origin, next) {
@@ -35,6 +36,6 @@ server.use(forbiddenErrorHandlerMiddleware);
 server.use(genericErrorHandlerMiddleware);
 console.table(listEndpoints(server));
 
-server.listen(process.env.PORT_NUM || 3000, () => {
-  console.log(`server running on ${process.env.PORT_NUM}`);
+server.listen(port, () => {
+  console.log(`server running on ${port}`);
 });
