@@ -35,6 +35,6 @@ server.use(forbiddenErrorHandlerMiddleware);
 server.use(genericErrorHandlerMiddleware);
 console.table(listEndpoints(server));
 
-server.listen(process.env.PORT_NUM || 5000, () => {
+server.listen(process.env.PORT_NUM || 3000, () => {
   console.log(`server running on ${process.env.PORT_NUM}`);
 });
