@@ -13,6 +13,7 @@ import {
 const server = express();
 const port = process.env.PORT || 3000;
 const whitelist = [process.env.FE_DEV_URL, process.env.FE_PROD_URL];
+console.log("PRODUCTION_URL------->", process.env.FE_PROD_URL);
 const corsOptions = {
   origin: function (origin, next) {
     console.log(origin);
