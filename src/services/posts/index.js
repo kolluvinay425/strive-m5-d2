@@ -6,29 +6,39 @@ import uniqid from "uniqid";
 import createHttpError from "http-errors";
 import { validationResult } from "express-validator";
 import postValidationMiddleware from "./validation.js";
-
+import { sendMail } from "../../lib/email.js";
 const postRouter = express.Router();
 // const currentFilePath = fileURLToPath(import.meta.url);
 // const currentDirPath = dirname(currentFilePath);
 //const path = join(currentDirPath, "posts.json");
 
 const path = join(dirname(fileURLToPath(import.meta.url)), "posts.json");
+console.log("apikey", process.env.MY_API_KEY);
 console.log("posts-------->", path);
 const read = () => JSON.parse(fs.readFileSync(path));
 const write = (content) => fs.writeFileSync(path, JSON.stringify(content));
 //Post
-postRouter.post("/", postValidationMiddleware, (req, res, next) => {
+postRouter.post("/", postValidationMiddleware, async (req, res, next) => {
   try {
     const errorList = validationResult(req);
     if (!errorList.isEmpty()) {
       //if it is not empty ,we have validation errors(input)
       next(createHttpError(400, { errorList }));
     } else {
-      const newPost = { ...req.body, id: uniqid(), createdAt: new Date() };
+      const newPost = {
+        ...req.body,
+        authorEmail: "kolluvinay425@gmail.com",
+        id: uniqid(),
+        createdAt: new Date(),
+      };
+
+      console.log("email------------<", newPost.authorEmail);
       const posts = read();
       console.log("all posts from posts.json------>", newPost);
       posts.push(newPost);
       write(posts);
+      const email = newPost.authorEmail;
+      await sendMail(email);
       res.status(201).send({ newPost });
     }
   } catch (error) {
@@ -93,6 +103,15 @@ postRouter.delete("/:id", (req, res, next) => {
     //write the remaining posts into the file
     fs.writeFileSync(path, JSON.stringify(singlePost));
     res.status(204).send("Deleted Successfully");
+  } catch (error) {
+    next(error);
+  }
+});
+postRouter.post("/email", async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    await sendMail(email);
+    res.status(201).send("mail sent");
   } catch (error) {
     next(error);
   }
